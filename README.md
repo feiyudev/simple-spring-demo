@@ -6,6 +6,41 @@
 docker build -t spring-demo:latest .
 ```
 
+### 推送 jar 包到 Maven 仓库
+1. 在 build.gradle 中添加 `id "maven-publish"`
+2. 在 build.gradle 中继续添加
+```gradle
+publishing {
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url("${artifactsRepoUrl}")
+            credentials {
+                username("${artifactsUsername}")
+                password("${artifactsPassword}")
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = "com.test"
+            artifactId = "my-site"
+            version = "1.5.2"
+
+            from components.java
+        }
+
+    }
+}
+```
+
+3. 在 gradle.properties 中添加远程仓库配置信息
+```properties
+artifactsRepoUrl=http://target-host/
+artifactsUsername=<username>
+artifactsPassword=<password>
+```
+
 ### Reference Documentation
 
 For further reference, please consider the following sections:
